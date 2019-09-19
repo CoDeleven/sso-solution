@@ -16,19 +16,20 @@ public class LoginController extends HttpServlet {
         // 密码
         String password = req.getParameter("password");
 
-        String sessionId = req.getSession().getId();
-
-        req.setAttribute("username", username);
-        req.setAttribute("password", password);
-
         req.getSession().setAttribute("username", username);
         req.getSession().setAttribute("password", password);
 
+        req.setAttribute("username", username);
         req.getRequestDispatcher("index.jsp").forward(req, resp);
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("login.jsp").forward(req, resp);
+        if(req.getSession().getAttribute("username") != null){
+            req.setAttribute("username", req.getSession().getAttribute("username"));
+            req.getRequestDispatcher("index.jsp").forward(req, resp);
+        }else{
+            req.getRequestDispatcher("login.jsp").forward(req, resp);
+        }
     }
 }
